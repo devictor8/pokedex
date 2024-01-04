@@ -11,7 +11,8 @@ let searchPokemon = 1
 
 const fetchPokemon = async (pokemon) => {
     const APIResponse = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon}`)
-    if (APIResponse.status == 200) {
+    
+    if (APIResponse.status === 200) {
         const data = await APIResponse.json()
         return data
     }
@@ -25,15 +26,15 @@ const renderPokemon = async (pokemon) => {
     
     if (data) {
         pokemonName.innerHTML = data.name
-        searchPokemon = pokemonNumber.innerHTML = data.id
+        pokemonNumber.innerHTML = data.id
         pokemonImage.src = data['sprites']['versions']['generation-v']['black-white']['animated']['front_default']
         pokemonImage.style.display = 'block'
         input.value = ''
+        searchPokemon = data.id
     } else {
         pokemonImage.style.display = 'none'
         pokemonName.innerHTML = 'Not Found :C'
         pokemonNumber.innerHTML = ''
-
     }
 }
 
@@ -45,13 +46,15 @@ form.addEventListener('submit', (event) => {
 buttonPrev.addEventListener('click', () => {
     if (searchPokemon > 1) {
         searchPokemon--
+        renderPokemon(searchPokemon)
     }
-    renderPokemon(searchPokemon)
 })
 
 buttonNext.addEventListener('click', () => {
-    searchPokemon++
-    renderPokemon(searchPokemon) 
+    if (searchPokemon < 649) {
+        searchPokemon += 1;
+        renderPokemon(searchPokemon);
+    }
 })
 
 renderPokemon(searchPokemon)
